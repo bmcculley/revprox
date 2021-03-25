@@ -1,0 +1,32 @@
+[Unit]
+Description=A Simple reverse proxy. 
+ConditionPathExists=/usr/local/revprox/server
+#Requires=dnsprox.socket
+After=syslog.target
+After=network.target
+ 
+[Service]
+Type=simple
+User=www-data
+Group=www-data
+LimitNOFILE=1024
+#CapabilityBoundingSet=CAP_NET_BIND_SERVICE
+AmbientCapabilities=CAP_NET_BIND_SERVICE
+Restart=on-failure
+RestartSec=2
+startLimitIntervalSec=60
+
+WorkingDirectory=/usr/local/revprox
+ExecStart=!!/usr/local/revprox/server
+
+# make sure log directory exists and owned by syslog
+PermissionsStartOnly=true
+ExecStartPre=/bin/mkdir -p /var/log/revprox
+ExecStartPre=/bin/chown root:adm /var/log/revprox
+ExecStartPre=/bin/chmod 755 /var/log/revprox
+StandardOutput=file:/var/log/revprox/access.log
+StandardError=file:/var/log/revprox/error.log
+SyslogIdentifier=revprox
+ 
+[Install]
+WantedBy=multi-user.target

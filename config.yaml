@@ -1,0 +1,4 @@
+allowedIP: 1.1.1.1
+revProxURL: http://127.0.0.1:3000
+listenPort: 127.0.0.1:7001
+liveReload: true
